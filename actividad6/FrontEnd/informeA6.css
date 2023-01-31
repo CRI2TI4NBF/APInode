@@ -1,0 +1,26 @@
+div#cajaprincipal {
+    width: 300px;
+    border: solid 1px black;
+    padding: 20px;
+    margin-left: calc(50% - 150px);
+    margin-top: 4%;
+    border-radius: 16px;
+    background: #c0d4c9;
+}
+
+footer {
+    margin-top: 50px;
+}
+
+.btn-primary {
+    color: #fff;
+    background-color: #007bff;
+    border-color: #007bff;
+    
+}
+button.btn.btn-primary {
+    height: 40px !important;
+    width: 47% !important;
+    margin-top: 5px !important;
+    margin-right: 4px !important;
+}
