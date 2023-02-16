@@ -1,21 +1,100 @@
 var express = require('express')
-var app = express()
+global.app = express()
+global.datos = [];
 var bodyparse = require('body-parser')
 app.use(bodyparse.json())
 app.use(bodyparse.urlencoded({extended:true}))
+const mongoose = require('mongoose')
 
 
-/* app.all('*',function(request,response){
+
+global.config = require(__dirname + '/config.js').config
 
 
+
+//Esto seria para configurar las cabeceras - 
+// app.all('*',function(request,response,next){
+
+//     var whitelist = request.headers.origin;
+//     //console.log(whitelist)
+//     response.header('Access-Control-Allow-Origin',whitelist)
+//     response.header("Access-Control-Allow-Crecentials","true");
+
+
+//     next()
+// })
+
+//(Este es el proceso ANTES de config.js) -- ANTES 
+// var cors = require('cors');// cross origin resource sharing
+// const { Router } = require('express');
+
+// app.use(cors({
+//     origin:function(origin,callback){
+//         console.log(origin)
+//         if(!origin)return callback(null,true)
+//         var listablanca = [
+//             'http://127.0.0.1:5500',
+//         ]
+//         if(listablanca.indexOf(origin) === -1){
+//             return callback('Error cors',false)
+//         }
+//         return callback(null,true)
+            
+//         // if(config.listablanca.indexOf(origin) === -1){
+//         //     return callback('Error cors',false)
+//         // }
+//         // return callback(null,true)
+
+//     }
+   
+// }))
+
+app.all('*',function(request,response,next){ 
     var whitelist = request.headers.origin;
-    console.log (whitelist)
+ 
+    response.header('Access-Control-Allow-Origin', whitelist) 
+    //response.header('Access-Control -Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS,HEAD'); 
+    //response.header('Access-Control-Allow-Headers', "authorization, Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers"); 
+    response.header("Access-Control-Allow-Credentials", "true"); 
+    
+    next() 
+})
+
+//(Este es el proceso DESPUES de config.js) -- DESPUES
+
+var cors = require('cors');// cross origin resource sharing
+const { Router } = require('express');
 
 
+app.use(cors({
+    origin:function(origin,callback){
+        console.log(origin)
+        if(!origin)return callback(null,true)
+        
+        if(config.listablanca.indexOf(origin) === -1){
+            return callback('Error cors',false)
+        }
+        return callback(null,true)
+            
+        // if(config.listablanca.indexOf(origin) === -1){
+        //     return callback('Error cors',false)
+        // }
+        // return callback(null,true)
+
+    }
+   
+}))
 
 
+mongoose.connect('mongodb://127.0.0.1:27017/' + config.bd, {useNewUrlParser:true,useUnifiedTopology:true},(error,response) => {
+    if(error){
+        console.log(error)
+    }
+    else{
+    console.log('conexion a mongo correcta')
+    }
+})
 
-}) */
 
 //api 
 /* app.get("/saludar",function(request,response){
@@ -74,277 +153,201 @@ app.post("/conteo/nombre",function(request,response){
 //Delet
 // un poco mas avanzado con el tema - seria informacion y completar datos 
 
-var datos = [];
-//Create
-// app.post("/Usuarios/Guardar",function(request,response){
 
-//     var post ={
+
+// Actividad Numero - 5 (tambien hace parte de la actividad -6)
+
+// var datos = [];
+
+// app.post("/Cliente/Guardar",function(request,response){
+
+//     var post = {
 //         cedula:request.body.cedula,
-//         name:request.doby.name,
-//         edad:request.body.edad
+//         nombres:request.body.nombres,
+//         apellidos:request.body.apellidos,
+//         direccion:request.body.direccion,
+//         telefono:request.body.telefono,
+//         edad:request.body.edad,
+//         estadocivil:request.body.estadocivil
+
 //     }
 
-//     if(post.name == ""|| post.name == null || post.name == undefined ){
-//         response.json({state:false,mensaje:"El campo name es obligatorio"})
-//         return false 
+//     if(post.cedula == "" || post.cedula == null ||  post.cedula == undefined ){
+//         response.json({state:false,mensaje:"El campo cedula es obligatorio"})
+//         return false
 //     }
-    
-//     if(post.cedula == ""|| post.cedula == null || post.cedula == undefined ){
+
+//     if(post.cedula.length < 5){
+//         response.json({state:false,mensaje:"La cedula no es validad, debe tener minimo 6 digitos"})
+//         return false
+//     }
+
+
+//     if(post.nombres == "" || post.nombres == null ||  post.nombres == undefined ){
+//         response.json({state:false,mensaje:"El campo nombres es obligatorio"})
+//         return false
+//     }
+
+//     if(post.apellidos == "" || post.apellidos == null ||  post.apellidos == undefined ){
+//         response.json({state:false,mensaje:"El campo apellidos es obligatorio"})
+//         return false
+//     }
+
+//     if(post.direccion == "" || post.direccion == null ||  post.direccion == undefined ){
+//         response.json({state:false,mensaje:"El campo direccion es obligatorio"})
+//         return false
+//     }
+//     if(post.telefono == "" || post.telefono == null ||  post.telefono == undefined ){
+//         response.json({state:false,mensaje:"El campo telefono es obligatorio"})
+//         return false
+//     }
+//     if(post.edad == "" || post.edad == null ||  post.edad == undefined ){
+//         response.json({state:false,mensaje:"El campo edad es obligatorio"})
+//         return false
+//     }
+//     if(post.estadocivil == "" || post.estadocivil == null ||  post.estadocivil == undefined ){
+//         response.json({state:false,mensaje:"El campo estado civil es obligatorio"})
+//         return false
+//     }
+ 
+
+//     datos.push({
+        
+//         cedula:post.cedula,
+//         nombres:post.nombres,
+//         apellidos:post.apellidos,
+//         direccion:post.direccion,
+//         numero:post.telefono,
+//         edad:post.edad,
+//         estadocivil:post.estadocivil
+
+//     })
+//     response.json({state:true,mensaje:"Usuario Guardado"})
+// })
+
+// app.post("/Cliente/ListarClientes",function(request,response){
+
+//     response.json({state:true,datos:datos})
+
+
+// })
+
+// app.post("/Cliente/Modificar",function(request,response){
+//     var post = {
+//         cedula:request.body.cedula,
+//         nombres:request.body.nombres,
+//         apellidos:request.body.apellidos,
+//         direccion:request.body.direccion,
+//         telefono:request.body.telefono,
+//         edad:request.body.edad,
+//         estadocivil:request.body.estadocivil
+//     }
+
+//     if(post.cedula == "" || post.cedula == null || post.cedula == undefined){
 //         response.json({state:false,mensaje:"El campo cedula es obligatorio"})
 //         return false 
 //     }
 
-//     if(post.edad == ""|| post.edad == null || post.edad == undefined ){
+//     if(post.nombres == "" || post.nombres == null ||  post.nombres == undefined ){
+//         response.json({state:false,mensaje:"El campo nombres es obligatorio"})
+//         return false
+//     }
+
+//     if(post.apellidos == "" || post.apellidos == null ||  post.apellidos == undefined ){
+//         response.json({state:false,mensaje:"El campo apellidos es obligatorio"})
+//         return false
+//     }
+
+//     if(post.direccion == "" || post.direccion == null ||  post.direccion == undefined ){
+//         response.json({state:false,mensaje:"El campo direccion es obligatorio"})
+//         return false
+//     }
+//     if(post.telefono == "" || post.telefono == null ||  post.telefono == undefined ){
+//         response.json({state:false,mensaje:"El campo telefono es obligatorio"})
+//         return false
+//     }
+//     if(post.edad == "" || post.edad == null ||  post.edad == undefined ){
 //         response.json({state:false,mensaje:"El campo edad es obligatorio"})
-//         return false 
+//         return false
 //     }
-
-//     if(post.name.length < 4 ){
-
-//         response.json({state:false,mensaje:"El campo name debe ser superior a 4 caracteres"})
-//         return false 
-//     }
-
-//     if(post.name.length > 20 ){
-
-//         response.json({state:false,mensaje:"El campo name debe ser inferior a 20 caracteres"})
-//         return false 
-
-//     }
-   
-
-
-
-
-
-
-
-//     datos.push(
-//     {
-//         nombre:post.name,
-//         edad:post.edad,
-//         cedeula:post.cedula
-
-//     })
-//     response.json({state:true,mesnaje:"Usuario Guardado"})
-
-
-
-// })
-// //Read
-// app.post("/Usuario/ListarUsuarios",function(request,response){
-//     response.json({state:true,datos:datos})
-// })
-// //Update
-// app.post("/Usuarios/ActualizarCedula",function(request,response){
-//     var post ={
-//         cedula:request.body.cedula,
-//         edad:request.body.edad
-//     }
-
-//     if(post.cedula == "" || post.cedula ==undefined || post.cedula == null){
-//         response.json({state:false,mensaje:"el campo cedula es obligacion"})
+//     if(post.estadocivil == "" || post.estadocivil == null ||  post.estadocivil == undefined ){
+//         response.json({state:false,mensaje:"El campo estado civil es obligatorio"})
 //         return false
 //     }
 
-//     if(post.edad == "" || post.edad ==undefined || post.edad == null){
-//         response.json({state:false,mensaje:"el campo edad es obligacion"})
-//         return false
-//     }
-//     var posicion = datos.findIndex((item) => item.cedula == post.cedula)
-//     response.jsom({state:true,mensaje:"se Actualizo Correctamente"})
-
-
-
-// })
-// //Delete
-// app.post("/Usuarios/BorrarCedula",function(request,response){
-//     var post ={
-//         cedula:request.body.cedula,
-      
-//     }
-
-//     if(post.cedula == "" || post.cedula ==undefined || post.cedula == null){
-//         response.json({state:false,mensaje:"el campo cedula es obligacion"})
-//         return false
-//     }
-
-    
-//     var posicion = datos.findIndex((item) => item.cedula == post.cedula)
-//     datos.splice(posicion,1)
-
-//     response.jsom({state:true,mensaje:"se Actualizo Correctamente"})
-
-
-
-// })
-
-//Actividad Numero - 5
-
-var datos = [];
-
-app.post("/Cliente/Guardar",function(request,response){
-
-    var post = {
-        cedula:request.body.cedula,
-        nombres:request.body.nombres,
-        apellidos:request.body.apellidos,
-        direccion:request.body.direccion,
-        telefono:request.body.telefono,
-        edad:request.body.edad,
-        estadocivil:request.body.estadocivil
-
-    }
-
-    if(post.cedula == "" || post.cedula == null ||  post.cedula == undefined ){
-        response.json({state:false,mensaje:"El campo cedula es obligatorio"})
-        return false
-    }
-
-    if(post.cedula.length < 5){
-        response.json({state:false,mensaje:"La cedula no es validad, debe tener minimo 6 digitos"})
-        return false
-    }
-
-
-    if(post.nombres == "" || post.nombres == null ||  post.nombres == undefined ){
-        response.json({state:false,mensaje:"El campo nombres es obligatorio"})
-        return false
-    }
-
-    if(post.apellidos == "" || post.apellidos == null ||  post.apellidos == undefined ){
-        response.json({state:false,mensaje:"El campo apellidos es obligatorio"})
-        return false
-    }
-
-    if(post.direccion == "" || post.direccion == null ||  post.direccion == undefined ){
-        response.json({state:false,mensaje:"El campo direccion es obligatorio"})
-        return false
-    }
-    if(post.telefono == "" || post.telefono == null ||  post.telefono == undefined ){
-        response.json({state:false,mensaje:"El campo telefono es obligatorio"})
-        return false
-    }
-    if(post.edad == "" || post.edad == null ||  post.edad == undefined ){
-        response.json({state:false,mensaje:"El campo edad es obligatorio"})
-        return false
-    }
-    if(post.estadocivil == "" || post.estadocivil == null ||  post.estadocivil == undefined ){
-        response.json({state:false,mensaje:"El campo estado civil es obligatorio"})
-        return false
-    }
- 
-
-    datos.push({
-        
-        cedula:request.body.cedula,
-        nombres:request.body.nombres,
-        apellidos:request.body.apellidos,
-        direccion:request.body.direccion,
-        numero:request.body.telefono,
-        edad:request.body.edad,
-        estadocivil:request.body.estadocivil
-
-    })
-    response.json({state:true,mensaje:"Usuario Guardado"})
-})
-
-app.post("/Cliente/ListarClientes",function(request,response){
-    response.json({state:true,datos:datos})
-})
-
-app.post("/Cliente/Modificar",function(request,response){
-    var post = {
-        cedula:request.body.cedula,
-        nombres:request.body.nombres,
-        apellidos:request.body.apellidos,
-        direccion:request.body.direccion,
-        telefono:request.body.telefono,
-        edad:request.body.edad,
-        estadocivil:request.body.estadocivil
-    }
-
-    if(post.cedula == "" || post.cedula == null || post.cedula == undefined){
-        response.json({state:false,mensaje:"El campo cedula es obligatorio"})
-        return false 
-    }
-
-    if(post.nombres == "" || post.nombres == null ||  post.nombres == undefined ){
-        response.json({state:false,mensaje:"El campo nombres es obligatorio"})
-        return false
-    }
-
-    if(post.apellidos == "" || post.apellidos == null ||  post.apellidos == undefined ){
-        response.json({state:false,mensaje:"El campo apellidos es obligatorio"})
-        return false
-    }
-
-    if(post.direccion == "" || post.direccion == null ||  post.direccion == undefined ){
-        response.json({state:false,mensaje:"El campo direccion es obligatorio"})
-        return false
-    }
-    if(post.telefono == "" || post.telefono == null ||  post.telefono == undefined ){
-        response.json({state:false,mensaje:"El campo telefono es obligatorio"})
-        return false
-    }
-    if(post.edad == "" || post.edad == null ||  post.edad == undefined ){
-        response.json({state:false,mensaje:"El campo edad es obligatorio"})
-        return false
-    }
-    if(post.estadocivil == "" || post.estadocivil == null ||  post.estadocivil == undefined ){
-        response.json({state:false,mensaje:"El campo estado civil es obligatorio"})
-        return false
-    }
-
-     var posicion = datos.findIndex((item)=> item.cedula == post.cedula)
+//      var posicion = datos.findIndex((item)=> item.cedula == post.cedula)
 
     
 
-     datos[posicion].nombres = post.nombres
-     datos[posicion].apellidos = post.apellidos
-     datos[posicion].direccion = post.direccion
-     datos[posicion].telefono = post.telefono
-     datos[posicion].edad = post.edad
-     datos[posicion].estadocivil = post.estadocivil
+//      datos[posicion].nombres = post.nombres
+//      datos[posicion].apellidos = post.apellidos
+//      datos[posicion].direccion = post.direccion
+//      datos[posicion].telefono = post.telefono
+//      datos[posicion].edad = post.edad
+//      datos[posicion].estadocivil = post.estadocivil
 
 
-     response.json ({state:true,mensaje:"Sea Modificico Correctamente"})
+//      response.json ({state:true,mensaje:"Sea Modificico Correctamente"})
 
-})
+// })
 
-app.post("/Cliente/Eliminar",function(request,response){
+// app.post("/Cliente/Eliminar",function(request,response){
 
-    var post = {
-        cedula:request.body.cedula
+//     var post = {
+//         cedula:request.body.cedula
        
-    }
+//     }
 
-    if(post.cedula == "" || post.cedula == null || post.cedula == undefined){
-        response.json({state:false,mensaje:"El campo cedula es obligatorio"})
-        return false 
-    }
+//     if(post.cedula == "" || post.cedula == null || post.cedula == undefined){
+//         response.json({state:false,mensaje:"El campo cedula es obligatorio"})
+//         return false 
+//     }
 
     
 
-     var posicion = datos.findIndex((item)=> item.cedula == post.cedula)
+//      var posicion = datos.findIndex((item)=> item.cedula == post.cedula)
 
-     if(posicion == -1){
-        response.json({state:false,mensaje:"No Existe esta Cedula"})
-        return false
-     }
+//      if(posicion == -1){
+//         response.json({state:false,mensaje:"No Existe esta Cedula"})
+//         return false
+//      }
 
-     datos.splice(posicion,1)
+//      datos.splice(posicion,1)
 
 
-     response.json ({state:true,mensaje:"Eliminacion de Forma Exitosa"})
+//      response.json ({state:true,mensaje:"Eliminacion de Forma Exitosa"})
+
+// })
+
+
+//(Esto es antes de la configuracion ) - ANTES
+
+// require(__dirname + '/routes.js')
+
+
+
+
+// app.listen(3000, function(){
+//     console.log('servidor funcionando por el puerto:' + 3000)
+
+// })
+
+//(Esto es despues de la configuracion ) - DESPUES
+
+require(__dirname + '/routes.js')
+
+
+
+app.listen(config.puerto, function(){
+    console.log('servidor funcionando por el puerto:' + config.puerto)
 
 })
 
 
 
-app.listen(3000, function(){
-    console.log('servidor funcionando por el puerto:' + 3000)
 
-})
+
+
+
 
 

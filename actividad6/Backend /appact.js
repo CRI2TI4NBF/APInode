@@ -229,7 +229,10 @@ app.post("/Cliente/Modificar",function(request,response){
 
      var posicion = datos.findIndex((item)=> item.cedula == post.cedula)
 
-    
+    if(posicion == -1){
+        response.json ({state:false,mensaje:"Esta cedula no Existe"})
+        return false
+    }
 
      datos[posicion].nombres = post.nombres
      datos[posicion].apellidos = post.apellidos

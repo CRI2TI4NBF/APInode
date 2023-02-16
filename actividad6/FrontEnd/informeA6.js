@@ -1,13 +1,52 @@
 var basedatos = []
 
+
+var limpiar = function(){
+
+    document.getElementById('cedula').value = ""
+    document.getElementById('nombres').value = ""
+    document.getElementById('apellidos').value = ""
+    document.getElementById('direccion').value = ""
+    document.getElementById('telefono').value = ""
+    document.getElementById('edad').value = ""
+    document.getElementById('estadocivil').value = ""
+}
+
+// var mostrar = function(){
+
+
+
+
+
+// var datos = document.getElementById("datos")
+// datos.innerHTML = " "
+
+
+// for (let a = 0; a < basedatos.length a++)
+
+
+// datos.innerHTML = datos.innerHTML + 
+// "<div class= 'item'>"+
+// "<div class= 'nombres'>"+ basedatos[a].nombres +"<div/>"+
+// "<div class= 'apellidos'>"+ basedatos[a].apellidos + "<div/>"+
+// "<div class= 'direccion'>"+ basedatos[a].direccion + "<div/>"+
+// "<div class= 'telefono'>"+ basedatos[a].telefono + "<div/>"+
+// "<div class= 'edad'>"+ basedatos[a].edad + "<div/>"+
+// "<div class= 'estadocivil'>"+ basedatos[a].estadocivil + "<div/>"+
+// "<div/>"
+     
+
+// }
+
 var ClienteGuardar = function(){
-    var cedula = document.getElementById('cedula').value;
-    var nombres = document.getElementById('nombres').value;
-    var apellidos = document.getElementById('apellidos').value;
-    var direccion = document.getElementById('direccion').value;
-    var telefono = document.getElementById('telefono').value;
-    var edad = document.getElementById('edad').value;
-    var estadocivil = document.getElementById('estadocivil').value;
+
+    var cedula = document.getElementById('cedula').value
+    var nombres = document.getElementById('nombres').value
+    var apellidos = document.getElementById('apellidos').value
+    var direccion = document.getElementById('direccion').value
+    var telefono = document.getElementById('telefono').value
+    var edad = document.getElementById('edad').value
+    var estadocivil = document.getElementById('estadocivil').value
 
     
     
@@ -31,15 +70,21 @@ var ClienteGuardar = function(){
 
     basedatos.push({cedula:cedula,nombres:nombres,apellidos:apellidos,direccion:direccion,telefono:telefono,edad:edad,estdocivil:estadocivil});
     localStorage.setItem("base",JSON.stringify(basedatos));
-    var mensaje = document.getElementById('mensaje')
-    mensaje.innerHTML = "<div class='alert alert-success' role='alert'>Registro exito</div>"
+    // var mensaje = document.getElementById('mensaje')
+    // mensaje.innerHTML = "<div class='alert alert-success' role='alert'>Registro exito</div>"
 
+
+    limpiar()
+    
 
 }
 
 var ClienteListarCliente = function (){
+
+  
 // WARNING: For POST requests, body is set to null by browsers.
 var data = "";
+
 
 var xhr = new XMLHttpRequest();
 xhr.withCredentials = true;
@@ -54,6 +99,10 @@ xhr.open("POST", "http://localhost:3000/Cliente/ListarClientes");
 console.log(data)
 xhr.send(data);
 console.log(ClienteListarCliente)
+
+
+
+
 }
  
 
